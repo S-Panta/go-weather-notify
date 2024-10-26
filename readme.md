@@ -22,7 +22,7 @@ This project fetch upon openweather api to get weather data and show that in you
     ROCKETCHAT_SERVER_URL = 'rocket-chat-server-url'
     USER_PASSWORD='rocket-chat-password'
     ROCKETCHAT_CHANNEL='rocket-chat-channel'
-    OPEN_WEATHER_API_KEY='open-weather-api-key' (signup to https://openweathermap.org/ to get our api key)
+    OPEN_WEATHER_API_KEY='open-weather-api-key' (signup to https://openweathermap.org/ to get api key)
     
 
 5. Build the project
