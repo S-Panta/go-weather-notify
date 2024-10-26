@@ -9,7 +9,7 @@ This project fetch upon openweather api to get weather data and show that in you
 
 1. Clone the repository:
    ```bash
-   git clone git@github.com:S-Panta/go-weather-notify.
+   git clone git@github.com:S-Panta/go-weather-notify
 2. Go to project directory
     ```bash
     cd go-weather-notify
