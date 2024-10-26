@@ -2,7 +2,7 @@ This project fetch upon openweather api to get weather data and show that in you
 
 ### Prerequisites
 
-- Go version (e.g., Go 1.23 )
+- Go 1.23
 - Hosted RocketChat Server. 
 
 ### Steps to Install
