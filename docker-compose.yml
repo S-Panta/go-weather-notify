@@ -1,0 +1,5 @@
+services:
+  setup-game:
+    image: go-weather-notify
+    volumes:
+      - .env:/app/.env 
