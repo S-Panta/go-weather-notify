@@ -29,4 +29,9 @@ This project fetch upon openweather api to get weather data and show that in you
 5. Build the project
     ```bash
     go build
- 6. Run the executable file
+6. Run the executable file
+
+### To run using docker
+
+1. rename .env.example and setup your own credentials
+2. run `docker-compose up` and Enjoy 
