@@ -28,3 +28,4 @@ This project fetch upon openweather api to get weather data and show that in you
 5. Build the project
     ```bash
     go build
+ 6. Run the executable file
