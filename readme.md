@@ -1,7 +1,5 @@
 This project fetch upon openweather api to get weather data and show that in your rocketchat room
 
-## Installation
-
 ### Prerequisites
 
 - Go version (e.g., Go 1.23 )
