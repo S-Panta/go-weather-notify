@@ -1,5 +1,5 @@
 services:
-  setup-game:
-    image: go-weather-notify
+  setup-weather-notify:
+    image: sabinpanta/go-weather-notify:alpha
     volumes:
-      - .env:/app/.env 
+      - .env:/app/.env
