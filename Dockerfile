@@ -5,7 +5,7 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY *.go /app
+COPY *.go /app/
 
 RUN go build -o /go-weather-notify
 

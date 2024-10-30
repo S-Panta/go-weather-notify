@@ -46,7 +46,7 @@ func GetConfig() Config {
 	}
 	apiKey := os.Getenv("OPEN_WEATHER_API_KEY")
 	serverURL := os.Getenv("ROCKETCHAT_SERVER_URL")
-	username := os.Getenv("USER_NAME")
+	username := os.Getenv("USER_EMAIL")
 	password := os.Getenv("USER_PASSWORD")
 	channel := os.Getenv("ROCKETCHAT_CHANNEL")
 
