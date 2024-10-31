@@ -40,9 +40,11 @@ type Config struct {
 }
 
 func GetConfig() Config {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
+	if _, err := os.Stat(".env"); err == nil {
+		err := godotenv.Load()
+		if err != nil {
+			log.Fatal("Error loading .env file")
+		}
 	}
 	apiKey := os.Getenv("OPEN_WEATHER_API_KEY")
 	serverURL := os.Getenv("ROCKETCHAT_SERVER_URL")
