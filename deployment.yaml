@@ -1,0 +1,38 @@
+# version of the Kubernetes API
+apiVersion: apps/v1
+
+# kind are object schema.
+# run kubectl api-resources to get different api resources and it's kind
+# deployment used when running from docker images
+kind: Deployment
+# metadata holds object identifier 
+metadata:
+  name: go-weather-notify-deployment
+
+spec:
+# currrently only 1 pod is choosen
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-weather-notify
+  template:
+    metadata:
+      labels:
+        app: go-weather-notify
+    spec:
+      containers:
+      - name: go-weather-notify
+        image: go-weather-notify:alpha
+        ports:
+        - containerPort: 8080
+        env:
+        - name: OPEN_WEATHER_API_KEY
+          value: "api-key-for-open-weather" 
+        - name: USER_EMAIL
+          value: "your-rocketchat-email"
+        - name: USER_PASSWORD
+          value: "your-rocketchat-password" 
+        - name: ROCKETCHAT_CHANNEL
+          value: "rocketchat-channel" 
+        - name: ROCKETCHAT_SERVER_URL
+          value: "rocketchat-host" 
