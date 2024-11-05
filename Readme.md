@@ -23,7 +23,7 @@ This project fetch upon openweather api to get weather data and show that in you
     ROCKETCHAT_SERVER_URL = 'rocket-chat-server-url'
     USER_PASSWORD='rocket-chat-password'
     ROCKETCHAT_CHANNEL='rocket-chat-channel'
-    OPEN_WEATHER_API_KEY='open-weather-api-key' (signup to https://openweathermap.org/ to get api key)
+    OPEN_WEATHER_API_KEY='open-weather-api-key' (signup to https://openweathermap.org/ to get API key)
     
 
 5. Build the project
@@ -33,5 +33,28 @@ This project fetch upon openweather api to get weather data and show that in you
 
 ### To run using docker
 
-1. rename .env.example and setup your own credentials
-2. run `docker-compose up` and Enjoy 
+1. rename .env.example and set your own credentials
+2. run `docker-compose up` and Enjoy
+
+### To run local Kubernetes setup using miniKube
+1. Install minikube locally.
+   ```
+   curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+   sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
+   ```
+2. Start your cluster
+   ```
+   minikube start --driver=docker
+   ```
+   For more installation queries, go to `https://minikube.sigs.k8s.io/docs/start`
+3. Apply YAML files
+   In deployment.yaml, set your credentials inside `value` of `env`
+   ```
+   kubectl apply -f deployment.yaml
+   kubectl apply -f service.yaml
+   
+   ```
+5. Access the application
+   ```
+   minikube service go-weather-notify-service --url
+   ```
