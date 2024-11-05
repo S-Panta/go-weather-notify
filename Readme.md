@@ -37,7 +37,8 @@ This project fetch upon openweather api to get weather data and show that in you
 2. run `docker-compose up` and Enjoy
 
 ### To run local Kubernetes setup using miniKube
-1. Install minikube locally.
+kubectl is command line tool for using the Kubernetes API and minikube is local Kubernete.
+1. Install Kubernetes and minikube locally. Go to https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/ for kubectl installation
    ```
    curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
    sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
@@ -47,12 +48,16 @@ This project fetch upon openweather api to get weather data and show that in you
    minikube start --driver=docker
    ```
    For more installation queries, go to `https://minikube.sigs.k8s.io/docs/start`
-3. Apply YAML files
+
+3. Build the docker image of app
+    ```
+    make docker-build
+    ```
+4. Apply YAML files
    In deployment.yaml, set your credentials inside `value` of `env`
    ```
    kubectl apply -f deployment.yaml
    kubectl apply -f service.yaml
-   
    ```
 5. Access the application
    ```
