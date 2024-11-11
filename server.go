@@ -7,10 +7,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/joho/godotenv"
-
 	"github.com/RocketChat/Rocket.Chat.Go.SDK/models"
 	"github.com/RocketChat/Rocket.Chat.Go.SDK/realtime"
+	"github.com/joho/godotenv"
 )
 
 type WeatherData struct {
@@ -39,12 +38,12 @@ type Config struct {
 	Channel   string
 }
 
-func GetConfig() Config {
-	if _, err := os.Stat(".env"); err == nil {
-		err := godotenv.Load()
-		if err != nil {
-			log.Fatal("Error loading .env file")
-		}
+func GetConfig() (Config, error) {
+	err := godotenv.Load()
+	// os error will be self explanatory
+	// if env not found,exiting the code
+	if err != nil {
+		return Config{}, fmt.Errorf("failed to load .env file: %w", err)
 	}
 	apiKey := os.Getenv("OPEN_WEATHER_API_KEY")
 	serverURL := os.Getenv("ROCKETCHAT_SERVER_URL")
@@ -52,23 +51,25 @@ func GetConfig() Config {
 	password := os.Getenv("USER_PASSWORD")
 	channel := os.Getenv("ROCKETCHAT_CHANNEL")
 
+	if apiKey == "" || serverURL == "" || username == "" || password == "" || channel == "" {
+		return Config{}, fmt.Errorf("missing required environment variables")
+	}
+
 	return Config{
 		ApiKey:    apiKey,
 		ServerUrl: serverURL,
 		Username:  username,
 		Password:  password,
 		Channel:   channel,
-	}
-
+	}, nil
 }
 
 func main() {
-	config := GetConfig()
-
-	u, err := url.Parse(config.ServerUrl)
+	config, err := GetConfig()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
+	u, _ := url.Parse(config.ServerUrl)
 
 	client, err := realtime.NewClient(u, true)
 	if err != nil {
@@ -79,9 +80,10 @@ func main() {
 		log.Fatalf("Login failed: %v", err)
 	}
 	fmt.Println("Logged in successfully!")
+
 	roomId, err := client.GetChannelId(config.Channel)
 	if err != nil {
-		fmt.Println("error getting room id", err)
+		log.Fatalf("error getting room id.", err.Error())
 	}
 	messageChannel := make(chan models.Message)
 
@@ -94,13 +96,15 @@ func main() {
 		for msg := range messageChannel {
 			fmt.Printf("Received message %s\n", msg.Msg)
 
-			if strings.HasPrefix((msg.Msg), "weather") {
+			if strings.HasPrefix(strings.ToLower(msg.Msg), "weather") {
 				words := strings.Fields(msg.Msg)
 				cityName := words[1]
 				response, err := GetWeatherData(config.ApiKey, cityName)
 				if err != nil {
-					fmt.Println("Function call error")
+					fmt.Printf("Error fetching weather data for %s: %v\n. Try again", cityName, err)
+					continue
 				}
+
 				condition := response.Weather[0].Condition
 				description := response.Weather[0].Description
 				feelsLike := response.Main.FeelsLike
@@ -109,7 +113,16 @@ func main() {
 				city := response.CityName
 
 				iconURL := fmt.Sprintf("https://openweathermap.org/img/wn/%s.png", icon)
-				msg := fmt.Sprintf("Weather Update:\nCondition: %s\nDescription: %s\nFeels Like: %.2f°C\nMax Temperature: %.2f°C \n City: %s \n Status: ![Weather Icon](%s)",
+				msg := fmt.Sprintf(
+					"Current Weather Report:\n"+
+						"----------------------------\n"+
+						"Condition        : %s\n"+
+						"Description      : %s\n"+
+						"Feels Like       : %.2f°C\n"+
+						"Max Temperature  : %.2f°C\n"+
+						"City             : %s\n"+
+						"Status           : ![Weather Icon](%s)\n"+
+						"----------------------------",
 					condition, description, feelsLike, maxTemp, city, iconURL)
 
 				reply := &models.Message{
@@ -118,8 +131,15 @@ func main() {
 				}
 
 				go func(reply *models.Message) {
-					if _, err := client.SendMessage(reply); err != nil {
-						log.Printf("Failed to send reply message: %v", err)
+					defer func() {
+						if r := recover(); r != nil {
+							log.Printf("Recovered from panic: %v", r)
+						}
+					}()
+
+					_, err := client.SendMessage(reply)
+					if err != nil {
+						log.Printf("Failed to send reply message: %v\n", err)
 					}
 				}(reply)
 			}
