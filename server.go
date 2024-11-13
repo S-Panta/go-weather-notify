@@ -101,7 +101,7 @@ func main() {
 				cityName := words[1]
 				response, err := GetWeatherData(config.ApiKey, cityName)
 				if err != nil {
-					fmt.Printf("Error fetching weather data for %s: %v\n. Try again", cityName, err)
+					log.Printf("error fetching weather data for %s: %v\n. Try again", cityName, err)
 					continue
 				}
 
@@ -131,19 +131,11 @@ func main() {
 				}
 
 				go func(reply *models.Message) {
-					defer func() {
-						if r := recover(); r != nil {
-							log.Printf("Recovered from panic: %v", r)
-						}
-					}()
-
-					_, err := client.SendMessage(reply)
-					if err != nil {
-						log.Printf("Failed to send reply message: %v\n", err)
+					if _, err := client.SendMessage(reply); err != nil {
+						log.Printf("Failed to send reply message: %v", err)
 					}
 				}(reply)
 			}
-
 		}
 
 	}()

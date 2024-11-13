@@ -20,7 +20,7 @@ func GetWeatherData(apiKey string, city string) (WeatherResponse, error) {
 	res, err := http.Get(url)
 
 	if err != nil {
-		fmt.Errorf("failed to fetch URL %s: %w", url, err)
+		return response, fmt.Errorf("failed to fetch URL %s: %w", url, err)
 	}
 	defer res.Body.Close()
 
@@ -31,7 +31,7 @@ func GetWeatherData(apiKey string, city string) (WeatherResponse, error) {
 		if err != nil {
 			return response, fmt.Errorf("failed to decode HTTP error response: %w", err)
 		}
-		return response, fmt.Errorf("Error fetching data for %s, %s: %s", city, httpError.Code, httpError.Message)
+		return response, fmt.Errorf("error fetching data for %s, %s: %s", city, httpError.Code, httpError.Message)
 	}
 
 	body, err := io.ReadAll(res.Body)
