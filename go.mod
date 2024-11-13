@@ -1,6 +1,6 @@
 module go-weather-notify
 
-go 1.23.1
+go 1.22.1
 
 require (
 	github.com/RocketChat/Rocket.Chat.Go.SDK v0.0.0-20240116134246-a8cbe886bab0
